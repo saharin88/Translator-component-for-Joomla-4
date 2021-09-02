@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="4.0" method="upgrade">
+    <name>com_translator</name>
+    <version>1.0.0</version>
+    <creationDate>May 2020</creationDate>
+    <author>Dmitry Sakharuk</author>
+    <authorEmail>contact@joom.work</authorEmail>
+    <authorUrl>https://joom.work</authorUrl>
+    <description>COM_TRANSLATOR_DESC</description>
+    <namespace path="src">Saharin\Component\Translator</namespace>
+    <administration>
+        <menu>COM_TRANSLATOR</menu>
+        <files>
+            <filename>access.xml</filename>
+            <filename>config.xml</filename>
+            <filename>translator.xml</filename>
+            <folder>forms</folder>
+            <folder>layouts</folder>
+            <folder>services</folder>
+            <folder>src</folder>
+            <folder>tmpl</folder>
+        </files>
+        <languages folder="language">
+            <language tag="en-GB">en-GB/en-GB.com_translator.ini</language>
+            <language tag="en-GB">en-GB/en-GB.com_translator.sys.ini</language>
+            <language tag="ru-RU">ru-RU/ru-RU.com_translator.ini</language>
+            <language tag="ru-RU">ru-RU/ru-RU.com_translator.sys.ini</language>
+            <language tag="uk-UA">uk-UA/uk-UA.com_translator.ini</language>
+            <language tag="uk-UA">uk-UA/uk-UA.com_translator.sys.ini</language>
+        </languages>
+    </administration>
+</extension>

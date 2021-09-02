@@ -1,0 +1,1 @@
+### Translator component for Joomla 4
