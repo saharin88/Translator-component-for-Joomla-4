@@ -22,17 +22,6 @@ $app = Factory::getApplication();
 $client   = $this->state->get('filter.client', 'site');
 $language = $this->state->get('filter.language', $app->getLanguage()->getTag());
 
-if ($this->state->get('filter.compare'))
-{
-	$languages = LanguageHelper::getKnownLanguages(constant('JPATH_' . strtoupper($this->state->get('filter.client', 'site'))));
-	unset($languages[$this->state->get('filter.language', Factory::getLanguage()->getTag())]);
-}
-else
-{
-	$languages = [];
-}
-
-
 $doc = $app->getDocument();
 $js  = <<< JS
 jQuery(document).ready(function($) {
@@ -56,7 +45,8 @@ $doc->addStyleDeclaration($css);
 
 
 ?>
-<form action="<?= Route::_('index.php?option=com_translator&view=files', false) ?>" method="post" name="adminForm" id="adminForm">
+<form action="<?= Route::_('index.php?option=com_translator&view=files', false) ?>" method="post" name="adminForm"
+      id="adminForm">
 
 
     <div id="j-main-container">
@@ -70,8 +60,11 @@ $doc->addStyleDeclaration($css);
             <div class="float-right mb-3">
                 <div class="custom-control custom-switch">
                     <input type="hidden" name="filter[compare]" value="0" id="compare" class="">
-                    <input id="compareCheckbox" type="checkbox"<?= ($this->state->get('filter.compare') ? ' checked' : '') ?> class="custom-control-input">
-                    <label class="custom-control-label" for="compareCheckbox"><?= Text::_('COM_TRANSLATE_SHOW_LANGUAGES_FOR_COMPARE') ?></label>
+                    <input id="compareCheckbox"
+                           type="checkbox"<?= ($this->state->get('filter.compare') ? ' checked' : '') ?>
+                           class="custom-control-input">
+                    <label class="custom-control-label"
+                           for="compareCheckbox"><?= Text::_('COM_TRANSLATE_SHOW_LANGUAGES_FOR_COMPARE') ?></label>
                 </div>
             </div>
 
@@ -83,7 +76,8 @@ $doc->addStyleDeclaration($css);
 			{
 				?>
                 <div class="alert alert-info">
-                    <span class="fa fa-info-circle" aria-hidden="true"></span><span class="sr-only"><?php echo Text::_('INFO'); ?></span>
+                    <span class="fa fa-info-circle" aria-hidden="true"></span><span
+                            class="sr-only"><?php echo Text::_('INFO'); ?></span>
 					<?php echo Text::_('JGLOBAL_NO_MATCHING_RESULTS'); ?>
                 </div>
 				<?php
@@ -105,25 +99,26 @@ $doc->addStyleDeclaration($css);
 							<?= Text::_('COM_TRANSLATOR_NUMBER_OF_CONSTANTS') ?>
                         </th>
 						<?php
-						if (!empty($languages))
+						if (!empty($this->languages))
 						{
-							foreach ($languages as $lang)
+							foreach ($this->languages as $lang)
 							{
 								?>
                                 <th class="text-center">
 									<?= $lang['nativeName'] ?>
+                                    <br/>
+                                    <small><?= Text::_('COM_TRANSLATOR_TOTAL_UNIQUE_LABEL') ?></small>
                                 </th>
 								<?php
 							}
 						}
 						?>
-
                     </tr>
                     </thead>
                     <tbody>
 					<?php
 					$i = 0;
-					foreach ($this->files AS $file)
+					foreach ($this->files as $file)
 					{
 						$i++;
 						$fileKey        = $client . ':' . $language . ':' . $file;
@@ -141,36 +136,28 @@ $doc->addStyleDeclaration($css);
 								<?= $countConstants ?>
                             </td>
 							<?php
-							if (!empty($languages))
+							if (!empty($this->languages))
 							{
-								foreach ($languages as $lang)
+								foreach ($this->languages as $lang)
 								{
-									$compareFileKey   = $client . ':' . $lang['tag'] . ':' . $file;
-									$compareConstants = [];
+									$compareFileKey = $client . ':' . $lang['tag'] . ':' . $file;
+
+									echo '<td class="text-center">';
 									try
 									{
 										$compareConstants      = TranslatorHelper::getConstants($compareFileKey);
 										$countCompareConstants = count($compareConstants);
+										$diffConstants         = array_diff_key($compareConstants, $constatnts);
+										$countDiffConstants    = count($diffConstants);
+
+										echo $countCompareConstants . ($countDiffConstants > 0 ? ' <span class="hasTooltip diff-constants text-error" title="' . implode('<br/>', array_keys($diffConstants)) . '">(' . $countDiffConstants . ')</span>' : '');
+
 									}
 									catch (Exception $e)
 									{
-										$countCompareConstants = '-';
+										echo HTMLHelper::_('link', Route::_('index.php?option=com_translator&task=file.create&file=' . $compareFileKey . '&' . Session::getFormToken() . '=1', false), Text::_('COM_TRANSLATOR_ADD_FILE'));
 									}
-
-									$diffConstants = false;
-
-									if ($countCompareConstants !== '-' && $countCompareConstants > $countConstants)
-									{
-										$diffConstants = array_diff_key($compareConstants, $constatnts);
-									}
-
-									?>
-                                    <td class="text-center">
-										<?php
-										echo($countCompareConstants === '-' ? HTMLHelper::_('link', Route::_('index.php?option=com_translator&task=file.create&file=' . $compareFileKey . '&' . Session::getFormToken() . '=1', false), Text::_('COM_TRANSLATOR_ADD_FILE')) : $countCompareConstants . ($diffConstants === false ? '' : ' <span class="hasTooltip diff-constants text-error" title="' . implode('<br/>', array_keys($diffConstants)) . '">(' . count($diffConstants) . ')</span>'));
-										?>
-                                    </td>
-									<?php
+									echo '</td>';
 								}
 							}
 							?>

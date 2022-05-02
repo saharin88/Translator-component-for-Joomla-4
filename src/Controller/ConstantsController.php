@@ -45,7 +45,7 @@ class ConstantsController extends BaseController
 
 	}
 
-	public function import()
+	public function export()
 	{
 		$this->checkToken('post', false) or die('Error Token');
 
@@ -64,17 +64,17 @@ class ConstantsController extends BaseController
 
 		if (empty($file))
 		{
-			$this->setRedirect(Route::_('index.php?option=com_translator&view=files', false), Text::_('COM_TRANSLATOR_IMPORT_EMPTY_FILE'))->redirect();
+			$this->setRedirect(Route::_('index.php?option=com_translator&view=files', false), Text::_('COM_TRANSLATOR_EXPORT_EMPTY_FILE'))->redirect();
 		}
 
 		if (empty($from_file))
 		{
-			$this->setRedirect(Route::_('index.php?option=com_translator&view=constants&file=' . $file, false), Text::_('COM_TRANSLATOR_IMPORT_EMPTY_FROM_FILE'))->redirect();
+			$this->setRedirect(Route::_('index.php?option=com_translator&view=constants&file=' . $file, false), Text::_('COM_TRANSLATOR_EXPORT_EMPTY_FROM_FILE'))->redirect();
 		}
 
 		try
 		{
-			$model->import($keys, $file, $from_file);
+			$model->export($keys, $file, $from_file);
 		}
 		catch (\Exception $e)
 		{
@@ -124,7 +124,7 @@ class ConstantsController extends BaseController
 
 		Factory::getSession()->set($file, null, 'com_translator.imported');
 
-		$this->setRedirect(Route::_('index.php?option=com_translator&view=constants&file=' . $file, false), Text::_('COM_TRANSLATOR_CLEAR_IMPORTED_SUCCESS'))->redirect();
+		$this->setRedirect(Route::_('index.php?option=com_translator&view=constants&file=' . $file, false), Text::_('COM_TRANSLATOR_CLEAR_EXPORTED_SUCCESS'))->redirect();
 	}
 
 	public function getModel($name = 'Constant', $prefix = 'Administrator', $config = ['ignore_request' => true])

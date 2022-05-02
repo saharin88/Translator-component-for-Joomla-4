@@ -75,11 +75,10 @@ CSS;
 
 
 $js = <<< JS
-
 jQuery(document).ready(function($) {
     
     $('input[name="checkAllImported"]').on('click', function(e) {
-        $('tr.table-success', 'table#constantList').find('input[type="checkbox"]').click();
+        $('tr.table-success', 'table#constantList').find($(this).is(':checked') ? 'input[type="checkbox"]:not(:checked)' : 'input[type="checkbox"]:checked').click();
     });
     
     $('#checkboxEditMode').on('click', function(e) {
@@ -237,9 +236,9 @@ $editMode = $this->state->get('edit_mode', '0');
                 </div>
 
                 <div class="float-start">
-                    <div class="float-end"><span class="imported-color"></span> - <?= Text::_('COM_TRANSLATOR_IMPORTED') . HTMLHelper::_('link', Route::_('index.php?option=com_translator&task=constants.clearImported&file=' . $file . '&' . Session::getFormToken() . '=1', false), Text::_('JCLEAR'), ['class' => 'clearImported']) ?></div>
+                    <div class="float-end"><span class="imported-color"></span> - <?= Text::_('COM_TRANSLATOR_EXPORTED') . HTMLHelper::_('link', Route::_('index.php?option=com_translator&task=constants.clearImported&file=' . $file . '&' . Session::getFormToken() . '=1', false), Text::_('JCLEAR'), ['class' => 'clearImported']) ?></div>
                     <div class="float-end">
-                        <input type="checkbox" name="checkAllImported" title="<?= Text::_('COM_TRANSLATOR_CHECK_ALL_IMPORTED') ?>" class="hasTooltip">
+                        <input type="checkbox" name="checkAllImported" title="<?= Text::_('COM_TRANSLATOR_CHECK_ALL_EXPORTED') ?>" class="hasTooltip">
                     </div>
                 </div>
 

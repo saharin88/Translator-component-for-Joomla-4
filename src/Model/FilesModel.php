@@ -46,12 +46,13 @@ class FilesModel extends ListModel
 
 		if (TranslatorHelper::getParam('show_self', '1') === '0')
 		{
-			$filters[] = '.com_translator';
+			$filters[] = 'com_translator';
 		}
 
 		$args[] = $filters;
 
 		$files = Folder::files(...$args);
+
 
 		$search = $this->getState('filter.search');
 
@@ -59,7 +60,7 @@ class FilesModel extends ListModel
 		{
 			$filter_files = [];
 
-			foreach ($files AS $file)
+			foreach ($files as $file)
 			{
 				if (mb_stristr($file, $search, false, 'UTF-8') !== false)
 				{
@@ -121,6 +122,22 @@ class FilesModel extends ListModel
 		}
 
 		return $data;
+	}
+
+
+	/**
+	 * Get list languages without selected
+	 *
+	 * @return array
+	 * @throws \Exception
+	 * @since  3.0
+	 */
+	public function getLanguagesWithoutSelected()
+	{
+		$languages = LanguageHelper::getKnownLanguages(constant('JPATH_' . strtoupper($this->getState('filter.client', 'site'))));
+		unset($languages[$this->getState('filter.language', Factory::getApplication()->getLanguage()->getTag())]);
+
+		return $languages;
 	}
 
 

@@ -246,7 +246,7 @@ class ConstantModel extends FormModel
 	}
 
 	/**
-	 * Import constants
+	 * Export constants
 	 *
 	 * @param   array   $keys
 	 * @param   string  $file
@@ -256,7 +256,7 @@ class ConstantModel extends FormModel
 	 * @throws \Exception
 	 * @since version
 	 */
-	public function import(array $keys, string $file, string $from_file)
+	public function export(array $keys, string $file, string $from_file)
 	{
 		$app       = Factory::getApplication();
 		$constants = TranslatorHelper::getConstants($file);
@@ -283,14 +283,12 @@ class ConstantModel extends FormModel
 			}
 		}
 
-		$success_count = count($success);
-
-		if ($success_count)
+		if ($success_count = count($success))
 		{
 			if (TranslatorHelper::saveToIniFile($constants, $file))
 			{
 
-				$session  = Factory::getSession();
+				$session  = Factory::getApplication()->getSession();
 				$imported = array_merge($session->get($file, [], 'com_translator.imported'), $success);
 				$session->set($file, $imported, 'com_translator.imported');
 
@@ -300,7 +298,7 @@ class ConstantModel extends FormModel
 					{
 						break;
 					}
-					$app->enqueueMessage(Text::sprintf('COM_TRANSLATOR_CONSTANT_IMPORT_SUCCESS', $key));
+					$app->enqueueMessage(Text::sprintf('COM_TRANSLATOR_CONSTANT_EXPORT_SUCCESS', $key));
 				}
 
 				if ($success_count > 10)

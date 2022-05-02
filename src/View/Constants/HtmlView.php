@@ -13,9 +13,10 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Layout\FileLayout;
 use Joomla\CMS\Object\CMSObject;
+use Saharin\Component\Translator\Administrator\Html\Toolbar\Button\PayPalButton;
 use Saharin\Component\Translator\Administrator\Model\ConstantsModel;
 use Joomla\CMS\Router\Route;
-use Saharin\Component\Translator\Administrator\Html\Toolbar\Button\ImportConstantsButton;
+use Saharin\Component\Translator\Administrator\Html\Toolbar\Button\ExportConstantsButton;
 use Joomla\CMS\Toolbar\Button\CustomButton;
 
 
@@ -53,7 +54,7 @@ class HtmlView extends BaseHtmlView
 				$this->googleForm    = $this->get('GoogleForm');
 				break;
 
-			case 'import':
+			case 'export':
 
 				$this->to_file = $app->input->get('to_file', null, 'raw');
 
@@ -113,14 +114,18 @@ class HtmlView extends BaseHtmlView
 			$files = $this->get('OtherLangs');
 			if (count($files))
 			{
-				$btn = new ImportConstantsButton('import', '', [
-					'name'    => 'import',
-					'label'   => Text::_('COM_TRANSLATOR_IMPORT_CONSTANTS'),
+				$btn = new ExportConstantsButton('export', '', [
+					'name'    => 'export',
+					'label'   => Text::_('COM_TRANSLATOR_EXPORT_CONSTANTS'),
 					'files'   => $files,
 					'to_file' => $this->state->get('file', $app->input->get('file', null, 'raw'))
 				]);
 				$bar->appendButton($btn);
 			}
+
+			$payPalDonateBtn = new PayPalButton();
+			$bar->appendButton($payPalDonateBtn);
+
 		}
 		else
 		{
